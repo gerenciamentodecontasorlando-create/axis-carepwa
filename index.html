@@ -1,0 +1,2056 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AXIS CARE</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#2563EB">
+  <meta name="color-scheme" content="light" />
+
+  <style>
+    :root{
+      --bg:#F9FAFB;
+      --card:#FFFFFF;
+      --ink:#1F2937;
+      --muted:#6B7280;
+      --line:#E5E7EB;
+      --soft:#EEF2FF;
+      --primary:#2563EB;
+      --primary2:#1D4ED8;
+      --ok:#16A34A;
+      --warn:#F59E0B;
+      --bad:#DC2626;
+      --shadow: 0 10px 30px rgba(17,24,39,.08);
+      --radius: 14px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--font);
+      background: radial-gradient(1100px 700px at 20% -10%, rgba(37,99,235,.10), transparent 60%),
+                  radial-gradient(1100px 700px at 110% 0%, rgba(37,99,235,.08), transparent 55%),
+                  var(--bg);
+      color:var(--ink);
+    }
+    button, input, textarea, select{font:inherit}
+    .hidden{display:none !important}
+
+    .app{min-height:100%; display:grid; grid-template-columns: 280px 1fr;}
+    .sidebar{
+      position:sticky; top:0; height:100vh;
+      padding:18px 16px;
+      border-right:1px solid var(--line);
+      background: rgba(255,255,255,.70);
+      backdrop-filter: blur(10px);
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      padding:12px; border-radius:16px;
+      background: linear-gradient(180deg, rgba(37,99,235,.10), rgba(37,99,235,.03));
+      border:1px solid rgba(37,99,235,.15);
+      box-shadow: 0 12px 30px rgba(37,99,235,.08);
+    }
+    .logoMark{
+      width:44px;height:44px;border-radius:14px;
+      display:grid;place-items:center;
+      background: linear-gradient(135deg, rgba(37,99,235,1), rgba(96,165,250,1));
+      color:white;font-weight:900;letter-spacing:.02em;
+      position:relative; overflow:hidden;
+    }
+    .logoMark::after{
+      content:""; position:absolute; inset:-30%;
+      background: radial-gradient(circle at 20% 20%, rgba(255,255,255,.45), transparent 45%);
+      transform: rotate(12deg);
+    }
+    .brand h1{margin:0; font-size:16px; letter-spacing:.08em; text-transform:uppercase; line-height:1.1;}
+    .brand p{margin:0; font-size:12px; color:var(--muted)}
+
+    .nav{margin-top:14px; display:flex; flex-direction:column; gap:8px;}
+    .nav button{
+      width:100%; text-align:left;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.75);
+      border-radius:12px;
+      cursor:pointer;
+      display:flex; align-items:center; justify-content:space-between;
+      transition: .15s ease;
+    }
+    .nav button:hover{transform: translateY(-1px); box-shadow: 0 10px 20px rgba(17,24,39,.06)}
+    .nav button.active{
+      border-color: rgba(37,99,235,.25);
+      background: linear-gradient(180deg, rgba(37,99,235,.12), rgba(255,255,255,.80));
+    }
+    .pill{
+      font-size:11px; padding:4px 8px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: var(--card);
+      color: var(--muted);
+    }
+
+    .content{padding:20px 22px 32px;}
+    .topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px;}
+    .topbar .search{
+      flex:1; display:flex; gap:10px; align-items:center;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.82);
+      box-shadow: 0 10px 20px rgba(17,24,39,.06);
+    }
+    .topbar input{border:none; outline:none; width:100%; background:transparent; color:var(--ink);}
+    .btnRow{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+    .btn{
+      border:none; cursor:pointer;
+      padding:10px 12px; border-radius: 12px;
+      background: var(--primary); color:white;
+      box-shadow: 0 12px 20px rgba(37,99,235,.20);
+      transition:.15s ease;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn.ghost{
+      background: rgba(255,255,255,.90);
+      color: var(--ink);
+      border:1px solid var(--line);
+      box-shadow: 0 10px 18px rgba(17,24,39,.06);
+    }
+    .btn.danger{background: var(--bad)}
+    .btn.ok{background: var(--ok)}
+    .grid{display:grid; grid-template-columns: 1fr; gap:14px;}
+    .card{
+      background: rgba(255,255,255,.85);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:14px;
+    }
+    .card h2{margin:0 0 10px; font-size:16px; letter-spacing:.02em;}
+    .muted{color:var(--muted)}
+    .row{display:grid; grid-template-columns: 1fr 1fr; gap:12px;}
+    .row3{display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px;}
+    .field label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px;}
+    .field input,.field textarea,.field select{
+      width:100%;
+      padding:10px 10px;
+      border:1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.95);
+      outline:none;
+    }
+    .field textarea{min-height:110px; resize:vertical}
+    .split{display:grid; grid-template-columns: 380px 1fr; gap:14px; align-items:start;}
+    .list{display:flex; flex-direction:column; gap:10px;}
+    .item{
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      background: rgba(255,255,255,.9);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .item strong{display:block}
+    .item small{display:block; color:var(--muted); margin-top:4px}
+    .item .actions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+    .tag{
+      font-size:11px;
+      border:1px solid var(--line);
+      padding:4px 8px;
+      border-radius:999px;
+      background: var(--soft);
+      color: var(--primary2);
+      display:inline-block;
+      margin-top:6px;
+    }
+    .hr{height:1px; background:var(--line); margin:12px 0}
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      font-size: 12px;
+      background: rgba(17,24,39,.06);
+      border:1px solid rgba(17,24,39,.08);
+      padding:2px 6px;
+      border-radius:8px
+    }
+
+    /* Toast */
+    .toast{
+      position: fixed; left: 18px; bottom: 18px;
+      display:flex; flex-direction:column; gap:10px;
+      z-index: 60; pointer-events:none;
+    }
+    .toast .t{
+      background: rgba(255,255,255,.95);
+      border:1px solid var(--line);
+      border-radius: 14px;
+      padding:10px 12px;
+      box-shadow: 0 18px 36px rgba(17,24,39,.12);
+      font-size: 13px;
+      transition:.2s ease;
+    }
+
+    /* Splash / Entrada */
+    .splash{
+      position: fixed; inset:0;
+      display:grid; place-items:center;
+      background: radial-gradient(1000px 650px at 20% 0%, rgba(37,99,235,.14), transparent 58%),
+                  radial-gradient(1000px 650px at 120% 20%, rgba(37,99,235,.10), transparent 62%),
+                  var(--bg);
+      z-index: 100;
+    }
+    .splashCard{
+      width: min(640px, calc(100% - 28px));
+      padding:22px;
+      border-radius: 22px;
+      border:1px solid rgba(37,99,235,.18);
+      background: rgba(255,255,255,.85);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 30px 70px rgba(17,24,39,.16);
+      text-align:center;
+    }
+    .bigMark{
+      width:86px;height:86px;margin: 6px auto 12px;
+      border-radius: 28px;
+      display:grid;place-items:center;
+      background: linear-gradient(135deg, rgba(37,99,235,1), rgba(96,165,250,1));
+      color:white; font-weight:900; letter-spacing:.03em;
+      position:relative; overflow:hidden;
+      font-size: 30px;
+    }
+    .bigMark::after{
+      content:""; position:absolute; inset:-30%;
+      background: radial-gradient(circle at 25% 20%, rgba(255,255,255,.45), transparent 45%);
+      transform: rotate(10deg);
+    }
+    .splashTitle{margin:0; letter-spacing:.18em; text-transform:uppercase; font-size: 20px;}
+    .splashSub{margin:8px 0 12px; color: var(--muted); font-size: 13px;}
+    .splashFoot{margin-top: 10px; color: var(--muted); font-size: 12px; line-height:1.4}
+    .splashBox{
+      text-align:left;
+      border:1px dashed rgba(37,99,235,.25);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,.7);
+      margin-top: 12px;
+    }
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;}
+
+    /* Modal */
+    .modal{
+      position: fixed; inset:0;
+      background: rgba(17,24,39,.45);
+      display:none; place-items:center;
+      z-index: 120; padding: 18px;
+    }
+    .modal.show{display:grid}
+    .modalCard{
+      width:min(980px, 100%);
+      max-height: calc(100vh - 36px);
+      overflow:auto;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.20);
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 40px 90px rgba(0,0,0,.25);
+      padding: 14px;
+    }
+    .modalHeader{
+      display:flex; justify-content:space-between; align-items:center;
+      gap:10px; padding: 8px 6px 12px;
+    }
+    .modalHeader h3{margin:0;font-size:16px}
+    .xbtn{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.95);
+      border-radius: 12px;
+      padding:8px 10px;
+      cursor:pointer;
+    }
+
+    /* Calendário */
+    .calHead{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;}
+    .calGrid{display:grid; grid-template-columns: repeat(7, 1fr); gap:8px;}
+    .dow{font-size: 11px; color: var(--muted); text-align:center; padding:6px 0;}
+    .day{
+      min-height: 90px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.9);
+      padding:8px;
+      display:flex; flex-direction:column; gap:6px;
+      cursor:pointer;
+      transition: .12s ease;
+    }
+    .day:hover{transform: translateY(-1px); box-shadow: 0 12px 20px rgba(17,24,39,.06)}
+    .day .n{font-size: 12px; color: var(--muted); display:flex; justify-content:space-between; align-items:center; gap:8px;}
+    .dotRow{display:flex; gap:4px; flex-wrap:wrap}
+    .dot{width:8px;height:8px;border-radius:999px; background: rgba(37,99,235,.55); border:1px solid rgba(37,99,235,.35);}
+    .today{border-color: rgba(37,99,235,.35); background: rgba(37,99,235,.05)}
+
+    /* Impressão */
+    .printStage{display:none}
+    @media print{
+      body{background:#fff}
+      .app, .splash, .modal, .toast{display:none !important}
+      .printStage{display:block}
+    }
+    .docShell{width: 210mm; margin: 0 auto; padding: 0;}
+    .docPage{
+      width: 210mm; height: 297mm;
+      background: #fff;
+      position: relative;
+      page-break-after: always;
+      overflow: hidden;
+    }
+    .docFrame{
+      position:absolute; inset: 10mm;
+      border: 0.6mm solid #D1D5DB;
+      border-radius: 4mm;
+      pointer-events:none;
+    }
+    .docInner{position:absolute; inset: 12mm; display:flex; flex-direction:column; gap: 6mm;}
+    .docHeader{
+      border-bottom: 0.3mm solid #E5E7EB;
+      padding-bottom: 3mm;
+      display:flex; gap: 6mm;
+      align-items:flex-start;
+    }
+    .docHeader .hLeft{flex:1}
+    .docHeader .hRight{text-align:right; min-width: 58mm;}
+    .docHeader .proName{font-size: 13.5pt; font-weight: 700; letter-spacing: .02em; color: #111827; line-height:1.2;}
+    .docHeader .proMeta{margin-top: 1.5mm; font-size: 9.5pt; color: #374151; line-height:1.2; white-space:pre-line;}
+    .docHeader .patName{margin-top: 2.5mm; font-size: 11.5pt; font-weight: 700; color: #1F2937;}
+    .docHeader .patMeta{margin-top: 1.2mm; font-size: 9.5pt; color: #4B5563; white-space:pre-line;}
+    .docHeader .docTitle{font-size: 14pt; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #1D4ED8;}
+    .docHeader .docMeta{margin-top: 2mm; font-size: 9.5pt; color: #374151; white-space:pre-line;}
+    .docBody{
+      flex:1;
+      overflow:hidden;
+      font-size: 11pt;
+      color: #111827;
+      line-height: 1.35;
+    }
+    .docBody .block{margin-bottom: 4mm}
+    .docBody h4{margin:0 0 2mm; font-size: 11pt; color:#1F2937; letter-spacing:.02em;}
+    .docBody p{margin:0 0 2.2mm; white-space:pre-wrap}
+    .docBody ul{margin:0 0 2.2mm 5mm; padding:0}
+    .docBody li{margin:0 0 1.6mm}
+    .docFooter{
+      border-top: 0.3mm solid #E5E7EB;
+      padding-top: 3mm;
+      display:flex; justify-content:space-between; align-items:flex-end;
+      gap: 8mm;
+      font-size: 9pt;
+      color: #374151;
+      white-space:pre-line;
+    }
+    .sigBox{margin-top: 7mm; display:flex; justify-content:flex-end;}
+    .sigWrap{width: 80mm; text-align:center;}
+    .sigLine{
+      border-top: 0.35mm solid #9CA3AF;
+      margin-top: 10mm;
+      padding-top: 2mm;
+      font-size: 9.5pt;
+      color:#111827;
+      line-height:1.2;
+      white-space:pre-line;
+    }
+    .sigImg{height: 18mm; object-fit: contain; display:block; margin: 0 auto;}
+
+    @media (max-width: 980px){
+      .app{grid-template-columns: 1fr}
+      .sidebar{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--line)}
+      .split{grid-template-columns: 1fr}
+      .row,.row3{grid-template-columns:1fr}
+      .btnRow{justify-content:flex-start}
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Splash / Entrada -->
+  <div id="splash" class="splash">
+    <div class="splashCard">
+      <div class="bigMark" aria-label="Símbolo Axis Care">A</div>
+      <h1 class="splashTitle">AXIS CARE</h1>
+      <div class="splashSub">Prontuário SOAP • Agenda • Documentos • Offline-first</div>
+
+      <div class="splashBox">
+        <div class="muted" style="font-size:12px; margin-bottom:8px">
+          ID do dispositivo (para controle/ativação):
+        </div>
+        <div class="mono" id="deviceIdView" style="font-weight:900; font-size:13px; word-break:break-all"></div>
+        <div style="height:10px"></div>
+
+        <div class="row" style="margin-top:4px">
+          <div class="field">
+            <label>Código de ativação (somente números)</label>
+            <input id="licenseCodeInput" inputmode="numeric" placeholder="Ex.: 81069644" />
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button class="btn ok" id="activateBtn" style="width:100%">Ativar</button>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+          <div class="field">
+            <label>PIN (opcional)</label>
+            <input id="pinInput" type="password" placeholder="Se você ativar PIN nas Configurações…" />
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button class="btn" id="enterBtn" style="width:100%">Entrar no sistema</button>
+          </div>
+        </div>
+
+        <div class="splashFoot" id="licenseStatus"></div>
+      </div>
+
+      <div class="splashFoot">
+        Dica: configure seus dados profissionais no menu <span class="kbd">Configurações</span>.
+      </div>
+    </div>
+  </div>
+
+  <!-- App -->
+  <div class="app" id="app" aria-hidden="true">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logoMark" title="Axis Care">A</div>
+        <div>
+          <h1>AXIS CARE</h1>
+          <p id="proMini" class="muted">Pronto para atender</p>
+        </div>
+      </div>
+
+      <div class="nav" id="nav">
+        <button data-view="dashboard" class="active"><span>Início</span><span class="pill">Visão geral</span></button>
+        <button data-view="calendar"><span>Agenda</span><span class="pill">Calendário</span></button>
+        <button data-view="patients"><span>Pacientes</span><span class="pill">Prontuário</span></button>
+        <button data-view="documents"><span>Documentos</span><span class="pill">Impressão</span></button>
+        <button data-view="settings"><span>Configurações</span><span class="pill">Profissional</span></button>
+      </div>
+
+      <div class="hr"></div>
+      <div class="muted" style="font-size:12px; padding:0 6px; line-height:1.5">
+        <div><strong>Memória:</strong> local + IndexedDB</div>
+        <div>Sem propaganda nos documentos</div>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <div class="search">
+          <span class="muted" style="font-size:12px">🔎</span>
+          <input id="globalSearch" placeholder="Buscar paciente, consulta, agendamento…" />
+        </div>
+        <div class="btnRow">
+          <button class="btn ghost" id="quickNewPatient">+ Novo paciente</button>
+          <button class="btn" id="quickNewAppt">+ Agendar</button>
+        </div>
+      </div>
+
+      <section id="view-dashboard" class="grid"></section>
+      <section id="view-calendar" class="grid hidden"></section>
+      <section id="view-patients" class="grid hidden"></section>
+      <section id="view-documents" class="grid hidden"></section>
+      <section id="view-settings" class="grid hidden"></section>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modalCard">
+      <div class="modalHeader">
+        <h3 id="modalTitle">Janela</h3>
+        <button class="xbtn" id="modalClose">Fechar</button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Área de impressão -->
+  <div class="printStage" id="printStage"></div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+<script>
+/* ==========================================================
+   AXIS CARE — COMPLETO (offline-first)
+   - Licença simples por dispositivo: código 81069644
+   - localStorage: settings/licença/pin
+   - IndexedDB: pacientes/consultas/agendamentos
+   - Documentos: receituário, atestado, laudo, orçamento, TCLE
+   - Impressão por documento com paginação (repete cabeçalho/rodapé)
+   ========================================================== */
+
+/* ===== Licença (código inicial) ===== */
+const AXIS_MASTER_CODE = "81069644";
+const LICENSE_KEY = "axiscare_license_v1";
+const DEVICE_KEY  = "axiscare_device_id_v1";
+
+/* ===== LocalStorage keys ===== */
+const LS_KEYS = {
+  settings: "axiscare_settings_v1",
+  pin: "axiscare_pin_v1",
+};
+
+/* ===== Defaults ===== */
+const DEFAULT_SETTINGS = {
+  clinicName: "",
+  professionalName: "",
+  council: "CRO",
+  councilUF: "PA",
+  councilNumber: "",
+  specialty: "",
+  phone: "",
+  email: "",
+  address: "",
+  cityUF: "Belém - PA",
+  logoDataUrl: "",
+  signatureDataUrl: "",
+  usePIN: false,
+};
+
+/* ===== Docs types ===== */
+const DOC_TYPES = [
+  { key:"rx",    name:"Receituário" },
+  { key:"att",   name:"Atestado" },
+  { key:"laudo", name:"Laudo" },
+  { key:"orc",   name:"Orçamento" },
+  { key:"tcle",  name:"Termo de Consentimento (TCLE)" },
+  { key:"soap",  name:"Impressão SOAP" },
+];
+
+const DOW = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+const $ = (sel, el=document) => el.querySelector(sel);
+const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
+const uid = () => (crypto?.randomUUID?.() || ("id-"+Math.random().toString(16).slice(2)+Date.now()));
+const pad2 = (n) => String(n).padStart(2,"0");
+const now = () => new Date();
+const fmtDateISO = (d) => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+const parseISO = (s) => { const [y,m,dd]=s.split("-").map(Number); return new Date(y,m-1,dd); };
+const fmtBR = (d) => `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()}`;
+
+/* ===== Toast ===== */
+const toast = (msg) => {
+  const box = $("#toast");
+  const t = document.createElement("div");
+  t.className="t";
+  t.textContent = msg;
+  box.appendChild(t);
+  setTimeout(()=>{ t.style.opacity="0"; t.style.transform="translateY(6px)"; }, 2200);
+  setTimeout(()=>{ t.remove(); }, 2800);
+};
+
+/* ==========================================================
+   LICENÇA: deviceId + hash simples
+   ========================================================== */
+function getDeviceId(){
+  let id = localStorage.getItem(DEVICE_KEY);
+  if(!id){
+    // fingerprint leve (não é "perfeito", mas serve p/ controle simples)
+    const ua = (navigator.userAgent || "ua").replace(/\s+/g," ").slice(0,120);
+    const seed = `${ua}|${screen.width}x${screen.height}|${navigator.language||""}|${Date.now()}`;
+    id = "AXC-" + simpleHash(seed).replace("-","N") + "-" + (screen.width+"x"+screen.height);
+    localStorage.setItem(DEVICE_KEY, id);
+  }
+  return id;
+}
+function simpleHash(str){
+  let hash = 0;
+  for(let i=0;i<str.length;i++){
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return hash.toString();
+}
+function activateAxisCare(code){
+  if(String(code||"").trim() !== AXIS_MASTER_CODE) return false;
+  const deviceId = getDeviceId();
+  const licenseHash = simpleHash(AXIS_MASTER_CODE + "|" + deviceId);
+  localStorage.setItem(LICENSE_KEY, licenseHash);
+  return true;
+}
+function isAxisCareLicensed(){
+  const saved = localStorage.getItem(LICENSE_KEY);
+  if(!saved) return false;
+  const deviceId = getDeviceId();
+  const expected = simpleHash(AXIS_MASTER_CODE + "|" + deviceId);
+  return saved === expected;
+}
+
+/* ==========================================================
+   Settings / PIN
+   ========================================================== */
+function loadSettings(){
+  try{
+    const raw = localStorage.getItem(LS_KEYS.settings);
+    if(!raw) return {...DEFAULT_SETTINGS};
+    return {...DEFAULT_SETTINGS, ...JSON.parse(raw)};
+  }catch{ return {...DEFAULT_SETTINGS}; }
+}
+function saveSettings(s){ localStorage.setItem(LS_KEYS.settings, JSON.stringify(s)); }
+function loadPIN(){ return localStorage.getItem(LS_KEYS.pin) || ""; }
+function savePIN(pin){
+  if(pin) localStorage.setItem(LS_KEYS.pin, pin);
+  else localStorage.removeItem(LS_KEYS.pin);
+}
+
+/* ==========================================================
+   IndexedDB
+   ========================================================== */
+const DB_NAME = "axiscare_db_v1";
+const DB_VERSION = 1;
+let db = null;
+
+function idbOpen(){
+  return new Promise((resolve, reject)=>{
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = ()=>{
+      const d = req.result;
+
+      if(!d.objectStoreNames.contains("patients")){
+        const st = d.createObjectStore("patients", { keyPath:"id" });
+        st.createIndex("by_name", "name", { unique:false });
+      }
+      if(!d.objectStoreNames.contains("visits")){
+        const st = d.createObjectStore("visits", { keyPath:"id" });
+        st.createIndex("by_patient", "patientId", { unique:false });
+        st.createIndex("by_date", "dateISO", { unique:false });
+      }
+      if(!d.objectStoreNames.contains("appointments")){
+        const st = d.createObjectStore("appointments", { keyPath:"id" });
+        st.createIndex("by_date", "dateISO", { unique:false });
+        st.createIndex("by_patient", "patientId", { unique:false });
+      }
+    };
+    req.onsuccess = ()=>{ db=req.result; resolve(db); };
+    req.onerror = ()=>reject(req.error);
+  });
+}
+function idbTx(store, mode="readonly"){ return db.transaction(store, mode).objectStore(store); }
+function idbPut(store, value){
+  return new Promise((resolve,reject)=>{
+    const req = idbTx(store,"readwrite").put(value);
+    req.onsuccess=()=>resolve(true);
+    req.onerror=()=>reject(req.error);
+  });
+}
+function idbDel(store, key){
+  return new Promise((resolve,reject)=>{
+    const req = idbTx(store,"readwrite").delete(key);
+    req.onsuccess=()=>resolve(true);
+    req.onerror=()=>reject(req.error);
+  });
+}
+function idbGet(store, key){
+  return new Promise((resolve,reject)=>{
+    const req = idbTx(store,"readonly").get(key);
+    req.onsuccess=()=>resolve(req.result || null);
+    req.onerror=()=>reject(req.error);
+  });
+}
+function idbAll(store){
+  return new Promise((resolve,reject)=>{
+    const req = idbTx(store,"readonly").getAll();
+    req.onsuccess=()=>resolve(req.result || []);
+    req.onerror=()=>reject(req.error);
+  });
+}
+function idbIndexAll(store, indexName, queryVal){
+  return new Promise((resolve,reject)=>{
+    const idx = idbTx(store,"readonly").index(indexName);
+    const req = idx.getAll(queryVal);
+    req.onsuccess=()=>resolve(req.result || []);
+    req.onerror=()=>reject(req.error);
+  });
+}
+
+/* ==========================================================
+   UI helpers
+   ========================================================== */
+function mkEl(tag, attrs={}, children=[]){
+  const el = document.createElement(tag);
+  Object.entries(attrs).forEach(([k,v])=>{
+    if(k==="class") el.className = v;
+    else if(k==="html") el.innerHTML = v;
+    else if(k==="style") el.setAttribute("style", v);
+    else if(k.startsWith("on") && typeof v==="function") el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v);
+  });
+  (Array.isArray(children)?children:[children]).forEach(ch=>{
+    if(ch==null) return;
+    el.appendChild(typeof ch==="string" ? document.createTextNode(ch) : ch);
+  });
+  return el;
+}
+function field(label, inputEl){
+  return mkEl("div",{class:"field"},[
+    (()=>{ const l=mkEl("label"); l.textContent=label; return l; })(),
+    inputEl
+  ]);
+}
+function btn(text, cls="btn", onClick=null){
+  const b = mkEl("button",{class:cls, type:"button"},[text]);
+  if(onClick) b.addEventListener("click", onClick);
+  return b;
+}
+
+/* ==========================================================
+   State
+   ========================================================== */
+let settings = loadSettings();
+let state = {
+  view: "dashboard",
+  search: "",
+  selectedPatientId: null,
+  calMonth: now().getMonth(),
+  calYear: now().getFullYear(),
+};
+
+/* ==========================================================
+   Modal
+   ========================================================== */
+function openModal(title, bodyNode){
+  $("#modalTitle").textContent = title;
+  const b = $("#modalBody");
+  b.innerHTML = "";
+  if(bodyNode) b.appendChild(bodyNode);
+  $("#modal").classList.add("show");
+  $("#modal").setAttribute("aria-hidden","false");
+}
+function closeModal(){
+  $("#modal").classList.remove("show");
+  $("#modal").setAttribute("aria-hidden","true");
+  $("#modalBody").innerHTML = "";
+}
+$("#modalClose").addEventListener("click", closeModal);
+$("#modal").addEventListener("click", (e)=>{ if(e.target.id==="modal") closeModal(); });
+
+/* ==========================================================
+   Navigation
+   ========================================================== */
+function setView(view){
+  state.view = view;
+  $$("#nav button").forEach(b=>b.classList.toggle("active", b.dataset.view===view));
+  ["dashboard","calendar","patients","documents","settings"].forEach(v=>{
+    $(`#view-${v}`).classList.toggle("hidden", v!==view);
+  });
+  render();
+}
+$("#nav").addEventListener("click", (e)=>{
+  const btn = e.target.closest("button[data-view]");
+  if(!btn) return;
+  setView(btn.dataset.view);
+});
+$("#globalSearch").addEventListener("input", (e)=>{
+  state.search = e.target.value.trim().toLowerCase();
+  render();
+});
+
+/* ==========================================================
+   Splash / activation / enter
+   ========================================================== */
+function setProMini(){
+  const name = settings.professionalName?.trim();
+  const meta = settings.councilNumber?.trim()
+    ? `${settings.council} ${settings.councilNumber}/${settings.councilUF}`
+    : "";
+  $("#proMini").textContent = name ? (meta ? `${name} • ${meta}` : name) : "Configure seus dados profissionais";
+}
+function updateSplashStatus(){
+  const ok = isAxisCareLicensed();
+  const st = $("#licenseStatus");
+  st.innerHTML = ok
+    ? `Status: <b style="color:#16A34A">ATIVADO</b> ✅`
+    : `Status: <b style="color:#DC2626">NÃO ATIVADO</b> — digite o código e clique em <b>Ativar</b>.`;
+}
+function enterApp(){
+  $("#splash").classList.add("hidden");
+  $("#app").setAttribute("aria-hidden","false");
+  render();
+}
+
+$("#activateBtn").addEventListener("click", ()=>{
+  const code = $("#licenseCodeInput").value.trim();
+  if(!code){ toast("Digite o código numérico."); return; }
+  if(activateAxisCare(code)){
+    toast("Ativado com sucesso!");
+    updateSplashStatus();
+  }else{
+    toast("Código inválido.");
+  }
+});
+
+$("#enterBtn").addEventListener("click", ()=>{
+  if(!isAxisCareLicensed()){
+    toast("Ative o sistema com o código numérico primeiro.");
+    return;
+  }
+  const pinOn = !!settings.usePIN;
+  if(!pinOn){ enterApp(); return; }
+  const saved = loadPIN();
+  const typed = $("#pinInput").value || "";
+  if(saved && typed === saved) enterApp();
+  else toast("PIN incorreto.");
+});
+
+/* ==========================================================
+   Calendar helpers
+   ========================================================== */
+function monthName(m){
+  return ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"][m];
+}
+function changeMonth(delta){
+  let m = state.calMonth + delta;
+  let y = state.calYear;
+  if(m<0){m=11;y--}
+  if(m>11){m=0;y++}
+  state.calMonth=m; state.calYear=y;
+  render();
+}
+
+/* ==========================================================
+   Seed demo (opcional)
+   ========================================================== */
+async function seedIfEmpty(){
+  const pats = await idbAll("patients");
+  if(pats.length) return;
+  const demoP = {
+    id: uid(),
+    name: "Paciente Demonstração",
+    birth: "1990-01-01",
+    cpf: "",
+    phone: "",
+    alerts: "Alergia: Dipirona (exemplo)",
+    notes: "Anotações gerais do paciente.",
+    createdAt: Date.now(),
+  };
+  await idbPut("patients", demoP);
+  await idbPut("visits", {
+    id: uid(),
+    patientId: demoP.id,
+    dateISO: fmtDateISO(now()),
+    time: "09:00",
+    soapS: "Queixa principal: dor leve ao mastigar. Início há 3 dias.",
+    soapO: "Exame: sensibilidade localizada, sem sinais sistêmicos.",
+    soapA: "Hipótese: inflamação local / trauma oclusal.",
+    soapP: "Conduta: orientar, analgesia se necessário, retorno em 7 dias.",
+    diagnoses: "CID/Diagnóstico (opcional)",
+    plan: "Plano (opcional)",
+    attachments: [],
+    createdAt: Date.now(),
+  });
+  await idbPut("appointments", {
+    id: uid(),
+    patientId: demoP.id,
+    dateISO: fmtDateISO(now()),
+    time: "10:30",
+    status: "Agendado",
+    notes: "",
+    createdAt: Date.now(),
+  });
+}
+
+/* ==========================================================
+   RENDER ROUTER
+   ========================================================== */
+async function render(){
+  setProMini();
+  await renderDashboard();
+  await renderCalendar();
+  await renderPatients();
+  await renderDocuments();
+  await renderSettings();
+}
+
+/* ==========================================================
+   DASHBOARD
+   ========================================================== */
+async function renderDashboard(){
+  const root = $("#view-dashboard");
+  root.innerHTML = "";
+
+  const pats = await idbAll("patients");
+  const appts = await idbAll("appointments");
+  const visits = await idbAll("visits");
+
+  const todayISO = fmtDateISO(now());
+  const todayAppts = appts.filter(a=>a.dateISO===todayISO).sort((a,b)=>a.time.localeCompare(b.time));
+
+  const card1 = mkEl("div",{class:"card"},[
+    mkEl("h2",{},["Visão geral"]),
+    mkEl("div",{class:"row3"},[
+      mkEl("div",{class:"card", style:"padding:12px; box-shadow:none; background:rgba(255,255,255,.75)"},[
+        mkEl("div",{class:"muted", style:"font-size:12px"},["Pacientes"]),
+        mkEl("div",{style:"font-size:22px; font-weight:900; margin-top:4px"},[String(pats.length)])
+      ]),
+      mkEl("div",{class:"card", style:"padding:12px; box-shadow:none; background:rgba(255,255,255,.75)"},[
+        mkEl("div",{class:"muted", style:"font-size:12px"},["Consultas (SOAP)"]),
+        mkEl("div",{style:"font-size:22px; font-weight:900; margin-top:4px"},[String(visits.length)])
+      ]),
+      mkEl("div",{class:"card", style:"padding:12px; box-shadow:none; background:rgba(255,255,255,.75)"},[
+        mkEl("div",{class:"muted", style:"font-size:12px"},["Agendamentos (hoje)"]),
+        mkEl("div",{style:"font-size:22px; font-weight:900; margin-top:4px"},[String(todayAppts.length)])
+      ]),
+    ]),
+    mkEl("div",{class:"hr"}),
+    mkEl("div",{class:"muted", style:"font-size:12px; line-height:1.5"},[
+      "Fluxo recomendado: ", mkEl("span",{class:"kbd"},["Pacientes"]), " → abrir paciente → ",
+      mkEl("span",{class:"kbd"},["Nova consulta SOAP"]), " → gerar documentos quando necessário."
+    ])
+  ]);
+
+  const card2 = mkEl("div",{class:"card"},[
+    mkEl("h2",{},["Agenda de hoje"]),
+    todayAppts.length
+      ? mkEl("div",{class:"list"}, todayAppts.map(a=>{
+          const p = pats.find(x=>x.id===a.patientId);
+          const who = p?.name || "Paciente";
+          const st = a.status || "Agendado";
+          return mkEl("div",{class:"item"},[
+            mkEl("div",{},[
+              mkEl("strong",{},[`${a.time} — ${who}`]),
+              mkEl("small",{},[st + (a.notes?` • ${a.notes}`:"")]),
+            ]),
+            mkEl("div",{class:"actions"},[
+              btn("Abrir paciente","btn ghost", ()=>{
+                state.selectedPatientId = a.patientId;
+                setView("patients");
+              }),
+            ])
+          ]);
+        }))
+      : mkEl("div",{class:"muted"},["Sem agendamentos para hoje."])
+  ]);
+
+  root.appendChild(card1);
+  root.appendChild(card2);
+}
+
+/* ==========================================================
+   Quick actions
+   ========================================================== */
+$("#quickNewPatient").addEventListener("click", ()=> openPatientForm(null));
+$("#quickNewAppt").addEventListener("click", ()=> openAppointmentForm(null));
+
+/* ==========================================================
+   PATIENTS VIEW
+   ========================================================== */
+async function renderPatients(){
+  const root = $("#view-patients");
+  if(state.view!=="patients"){ root.innerHTML=""; return; }
+  root.innerHTML = "";
+
+  const pats = (await idbAll("patients")).sort((a,b)=>a.name.localeCompare(b.name));
+  const filtered = state.search
+    ? pats.filter(p=> (p.name||"").toLowerCase().includes(state.search))
+    : pats;
+
+  const left = mkEl("div",{class:"card"},[
+    mkEl("h2",{},["Pacientes"]),
+    mkEl("div",{class:"muted", style:"font-size:12px; margin:-6px 0 10px"},[
+      "Clique em um paciente para abrir o prontuário."
+    ]),
+    mkEl("div",{class:"btnRow", style:"justify-content:flex-start; margin-bottom:10px"},[
+      btn("+ Novo paciente","btn", ()=> openPatientForm(null)),
+    ]),
+    mkEl("div",{class:"list"}, filtered.map(p=> patientListItem(p)))
+  ]);
+
+  const right = mkEl("div",{class:"card"},[
+    mkEl("h2",{},["Prontuário (SOAP)"]),
+    mkEl("div",{id:"patientPanel"},[])
+  ]);
+
+  const wrap = mkEl("div",{class:"split"},[left,right]);
+  root.appendChild(wrap);
+
+  await renderPatientPanel();
+}
+function patientListItem(p){
+  const isSel = p.id === state.selectedPatientId;
+  const el = mkEl("div",{class:"item", style: isSel ? "border-color: rgba(37,99,235,.35); background: rgba(37,99,235,.06)" : ""},[
+    mkEl("div",{},[
+      mkEl("strong",{},[p.name]),
+      mkEl("small",{},[
+        (p.birth?`Nascimento: ${fmtBR(parseISO(p.birth))}`:"") + (p.phone?` • ${p.phone}`:"")
+      ]),
+      p.alerts ? mkEl("span",{class:"tag"},["Alertas: " + p.alerts]) : null
+    ]),
+    mkEl("div",{class:"actions"},[
+      btn("Abrir","btn ghost", async ()=>{
+        state.selectedPatientId = p.id;
+        await renderPatients();
+      }),
+      btn("Editar","btn ghost", ()=> openPatientForm(p)),
+      btn("Excluir","btn danger", async ()=>{
+        if(!confirm("Excluir paciente?")) return;
+        await idbDel("patients", p.id);
+        if(state.selectedPatientId===p.id) state.selectedPatientId=null;
+        toast("Paciente excluído.");
+        await renderPatients();
+      }),
+    ])
+  ]);
+  el.addEventListener("click",(e)=>{
+    if(e.target.closest("button")) return;
+    state.selectedPatientId = p.id;
+    renderPatients();
+  });
+  return el;
+}
+async function renderPatientPanel(){
+  const panel = $("#patientPanel");
+  panel.innerHTML = "";
+
+  if(!state.selectedPatientId){
+    panel.appendChild(mkEl("div",{class:"muted"},["Selecione um paciente para ver o prontuário."]));
+    return;
+  }
+  const p = await idbGet("patients", state.selectedPatientId);
+  if(!p){
+    panel.appendChild(mkEl("div",{class:"muted"},["Paciente não encontrado."]));
+    return;
+  }
+
+  const visits = (await idbIndexAll("visits","by_patient", p.id))
+    .sort((a,b)=> (b.dateISO+(b.time||"")).localeCompare(a.dateISO+(a.time||"")));
+
+  const header = mkEl("div",{},[
+    mkEl("div",{class:"row"},[
+      mkEl("div",{},[
+        mkEl("div",{style:"font-weight:900; font-size:18px"},[p.name]),
+        mkEl("div",{class:"muted", style:"margin-top:4px"},[
+          (p.birth?`Nascimento: ${fmtBR(parseISO(p.birth))}`:"") +
+          (p.cpf?` • CPF: ${p.cpf}`:"") +
+          (p.phone?` • Tel: ${p.phone}`:"")
+        ]),
+        p.alerts ? mkEl("div",{class:"tag"},["Alertas: " + p.alerts]) : null
+      ]),
+      mkEl("div",{style:"text-align:right"},[
+        btn("Nova consulta SOAP","btn", ()=> openVisitForm(p, null)),
+        mkEl("div",{style:"height:8px"}),
+        btn("Documentos","btn ghost", ()=>{
+          state.selectedPatientId = p.id;
+          setView("documents");
+        }),
+      ])
+    ]),
+    mkEl("div",{class:"hr"}),
+  ]);
+
+  const list = mkEl("div",{class:"list"}, visits.length ? visits.map(v=> visitItem(p,v)) : [
+    mkEl("div",{class:"muted"},["Ainda sem consultas registradas. Clique em “Nova consulta SOAP”."])
+  ]);
+
+  panel.appendChild(header);
+  panel.appendChild(list);
+}
+function visitItem(p, v){
+  return mkEl("div",{class:"item"},[
+    mkEl("div",{},[
+      mkEl("strong",{},[`${fmtBR(parseISO(v.dateISO))} • ${v.time || "--:--"}`]),
+      mkEl("small",{},[
+        (v.soapA?("A: "+v.soapA.slice(0,90)+(v.soapA.length>90?"…":"")):"Sem avaliação") +
+        (v.diagnoses?(" • "+v.diagnoses):"")
+      ]),
+    ]),
+    mkEl("div",{class:"actions"},[
+      btn("Abrir","btn ghost", ()=> openVisitForm(p, v)),
+      btn("Imprimir SOAP","btn ghost", ()=> printSOAP(p, v)),
+      btn("Excluir","btn danger", async ()=>{
+        if(!confirm("Excluir esta consulta?")) return;
+        await idbDel("visits", v.id);
+        toast("Consulta excluída.");
+        await renderPatients();
+      })
+    ])
+  ]);
+}
+
+/* ==========================================================
+   Patient form
+   ========================================================== */
+function openPatientForm(existing){
+  const p = existing || {
+    id: uid(),
+    name:"",
+    birth:"",
+    cpf:"",
+    phone:"",
+    alerts:"",
+    notes:"",
+    createdAt: Date.now()
+  };
+
+  const name = mkEl("input",{value: p.name, placeholder:"Nome completo"});
+  const birth = mkEl("input",{value: p.birth, type:"date"});
+  const cpf = mkEl("input",{value: p.cpf, placeholder:"CPF (opcional)"});
+  const phone = mkEl("input",{value: p.phone, placeholder:"Telefone/WhatsApp (opcional)"});
+  const alerts = mkEl("textarea",{placeholder:"Alergias, riscos, medicações contínuas… (visível no topo)"});
+  alerts.value = p.alerts || "";
+  const notes = mkEl("textarea",{placeholder:"Anotações gerais do paciente (opcional)"});
+  notes.value = p.notes || "";
+
+  const wrap = mkEl("div",{},[
+    mkEl("div",{class:"row"},[
+      field("Nome do paciente", name),
+      field("Data de nascimento", birth),
+    ]),
+    mkEl("div",{class:"row"},[
+      field("CPF (opcional)", cpf),
+      field("Telefone/WhatsApp (opcional)", phone),
+    ]),
+    field("Alertas clínicos (sempre visível)", alerts),
+    field("Notas gerais (opcional)", notes),
+    mkEl("div",{class:"btnRow"},[
+      btn("Salvar","btn", async ()=>{
+        const obj = {
+          ...p,
+          name: name.value.trim(),
+          birth: birth.value || "",
+          cpf: cpf.value.trim(),
+          phone: phone.value.trim(),
+          alerts: alerts.value.trim(),
+          notes: notes.value.trim(),
+        };
+        if(!obj.name){ toast("Informe o nome do paciente."); return; }
+        await idbPut("patients", obj);
+        state.selectedPatientId = obj.id;
+        toast("Paciente salvo.");
+        closeModal();
+        setView("patients");
+      }),
+      btn("Cancelar","btn ghost", closeModal),
+    ])
+  ]);
+  openModal(existing?"Editar paciente":"Novo paciente", wrap);
+}
+
+/* ==========================================================
+   Visit form (SOAP)
+   ========================================================== */
+function openVisitForm(patient, existing){
+  const v = existing || {
+    id: uid(),
+    patientId: patient.id,
+    dateISO: fmtDateISO(now()),
+    time: `${pad2(now().getHours())}:${pad2(now().getMinutes())}`,
+    soapS: "Queixa principal: ",
+    soapO: "Exame físico/achados: ",
+    soapA: "Avaliação/hipóteses: ",
+    soapP: "Plano/conduta: ",
+    diagnoses: "",
+    plan: "",
+    attachments: [],
+    createdAt: Date.now(),
+  };
+
+  const date = mkEl("input",{type:"date", value: v.dateISO});
+  const time = mkEl("input",{value: v.time, placeholder:"HH:MM"});
+  const s = mkEl("textarea"); s.value = v.soapS||"";
+  const o = mkEl("textarea"); o.value = v.soapO||"";
+  const a = mkEl("textarea"); a.value = v.soapA||"";
+  const p = mkEl("textarea"); p.value = v.soapP||"";
+  const diag = mkEl("input",{value: v.diagnoses||"", placeholder:"CID/Diagnóstico (opcional)"});
+  const plan = mkEl("input",{value: v.plan||"", placeholder:"Plano resumido (opcional)"});
+
+  const wrap = mkEl("div",{},[
+    mkEl("div",{class:"muted", style:"margin:-6px 0 10px"},[
+      "Paciente: ", mkEl("strong",{},[patient.name]), " • SOAP evolutivo por consulta."
+    ]),
+    mkEl("div",{class:"row"},[
+      field("Data", date),
+      field("Hora", time),
+    ]),
+    mkEl("div",{class:"row"},[
+      field("Diagnóstico (opcional)", diag),
+      field("Plano resumido (opcional)", plan),
+    ]),
+    mkEl("div",{class:"row"},[
+      field("S — Subjetivo", s),
+      field("O — Objetivo", o),
+    ]),
+    mkEl("div",{class:"row"},[
+      field("A — Avaliação", a),
+      field("P — Plano", p),
+    ]),
+    mkEl("div",{class:"btnRow"},[
+      btn("Salvar consulta","btn", async ()=>{
+        const obj = {
+          ...v,
+          dateISO: date.value || fmtDateISO(now()),
+          time: time.value.trim() || "00:00",
+          soapS: s.value.trim(),
+          soapO: o.value.trim(),
+          soapA: a.value.trim(),
+          soapP: p.value.trim(),
+          diagnoses: diag.value.trim(),
+          plan: plan.value.trim(),
+        };
+        await idbPut("visits", obj);
+        toast("Consulta salva.");
+        closeModal();
+        await renderPatients();
+      }),
+      btn("Imprimir SOAP","btn ghost", ()=>{
+        const obj = {
+          ...v,
+          dateISO: date.value || fmtDateISO(now()),
+          time: time.value.trim() || "00:00",
+          soapS: s.value.trim(),
+          soapO: o.value.trim(),
+          soapA: a.value.trim(),
+          soapP: p.value.trim(),
+          diagnoses: diag.value.trim(),
+          plan: plan.value.trim(),
+        };
+        printSOAP(patient, obj);
+      }),
+      btn("Cancelar","btn ghost", closeModal),
+    ])
+  ]);
+  openModal(existing?"Consulta SOAP":"Nova consulta SOAP", wrap);
+}
+
+/* ==========================================================
+   CALENDAR VIEW
+   ========================================================== */
+async function renderCalendar(){
+  const root = $("#view-calendar");
+  if(state.view!=="calendar"){ root.innerHTML=""; return; }
+  root.innerHTML = "";
+
+  const appts = await idbAll("appointments");
+  const pats = await idbAll("patients");
+  const m = state.calMonth, y = state.calYear;
+
+  const head = mkEl("div",{class:"card"},[
+    mkEl("div",{class:"calHead"},[
+      mkEl("div",{},[
+        mkEl("h2",{style:"margin:0"},["Agenda — Calendário"]),
+        mkEl("div",{class:"muted", style:"font-size:12px"},["Clique em um dia para ver/criar agendamentos."])
+      ]),
+      mkEl("div",{class:"btnRow"},[
+        btn("◀","btn ghost", ()=> changeMonth(-1)),
+        btn("Hoje","btn ghost", ()=>{ const d=now(); state.calMonth=d.getMonth(); state.calYear=d.getFullYear(); render(); }),
+        btn("▶","btn ghost", ()=> changeMonth(1)),
+        btn("+ Agendar","btn", ()=> openAppointmentForm(null)),
+      ])
+    ]),
+    mkEl("div",{class:"muted", style:"font-size:12px; margin-top:-6px"},[
+      `${monthName(m)} ${y}`
+    ])
+  ]);
+
+  const calCard = mkEl("div",{class:"card"},[]);
+  const grid = mkEl("div",{class:"calGrid"},[]);
+  DOW.forEach(d=> grid.appendChild(mkEl("div",{class:"dow"},[d])));
+
+  const first = new Date(y, m, 1);
+  const startDow = first.getDay();
+  const daysInMonth = new Date(y, m+1, 0).getDate();
+  const todayISO = fmtDateISO(now());
+
+  for(let i=0;i<startDow;i++) grid.appendChild(mkEl("div",{style:"min-height:90px"}));
+
+  for(let day=1; day<=daysInMonth; day++){
+    const dateISO = `${y}-${pad2(m+1)}-${pad2(day)}`;
+    const dayAppts = appts.filter(a=>a.dateISO===dateISO);
+    const el = mkEl("div",{class:"day "+(dateISO===todayISO?"today":"")},[
+      mkEl("div",{class:"n"},[
+        mkEl("span",{},[String(day)]),
+        mkEl("span",{class:"muted", style:"font-size:11px"},[dayAppts.length?`${dayAppts.length} ag.`:""])
+      ]),
+      mkEl("div",{class:"dotRow"}, dayAppts.slice(0,10).map(()=>mkEl("span",{class:"dot"})))
+    ]);
+    el.addEventListener("click", ()=> openDayAgenda(dateISO, dayAppts, pats));
+    grid.appendChild(el);
+  }
+
+  calCard.appendChild(grid);
+  root.appendChild(head);
+  root.appendChild(calCard);
+}
+
+async function openDayAgenda(dateISO, dayAppts, pats){
+  const title = `Agenda do dia — ${fmtBR(parseISO(dateISO))}`;
+  const list = mkEl("div",{class:"list"},[]);
+
+  const sorted = dayAppts.slice().sort((a,b)=>a.time.localeCompare(b.time));
+  if(!sorted.length){
+    list.appendChild(mkEl("div",{class:"muted"},["Sem agendamentos neste dia. Crie um abaixo."]));
+  } else {
+    sorted.forEach(a=>{
+      const p = pats.find(x=>x.id===a.patientId);
+      list.appendChild(mkEl("div",{class:"item"},[
+        mkEl("div",{},[
+          mkEl("strong",{},[`${a.time} — ${(p?.name||"Paciente")}`]),
+          mkEl("small",{},[(a.status||"Agendado") + (a.notes?` • ${a.notes}`:"")]),
+        ]),
+        mkEl("div",{class:"actions"},[
+          btn("Abrir paciente","btn ghost", ()=>{
+            state.selectedPatientId = a.patientId;
+            closeModal();
+            setView("patients");
+          }),
+          btn("Editar","btn ghost", ()=> openAppointmentForm(a)),
+          btn("Excluir","btn danger", async ()=>{
+            if(!confirm("Excluir agendamento?")) return;
+            await idbDel("appointments", a.id);
+            toast("Agendamento excluído.");
+            closeModal();
+            setView("calendar");
+          }),
+        ])
+      ]));
+    });
+  }
+
+  const addBox = mkEl("div",{class:"card", style:"padding:12px; box-shadow:none; background:rgba(255,255,255,.75); border:1px dashed rgba(37,99,235,.25)"},[
+    mkEl("div",{class:"muted", style:"font-size:12px; margin-bottom:10px"},["Criar agendamento para este dia:"]),
+    btn("+ Agendar","btn", ()=> openAppointmentForm({dateISO}))
+  ]);
+
+  openModal(title, mkEl("div",{},[list, mkEl("div",{style:"height:10px"}), addBox]));
+}
+
+async function openAppointmentForm(existing){
+  const pats = (await idbAll("patients")).sort((a,b)=>a.name.localeCompare(b.name));
+  const a = {
+    id: existing?.id || uid(),
+    patientId: existing?.patientId || (pats[0]?.id || ""),
+    dateISO: existing?.dateISO || fmtDateISO(now()),
+    time: existing?.time || "08:00",
+    status: existing?.status || "Agendado",
+    notes: existing?.notes || "",
+    createdAt: existing?.createdAt || Date.now(),
+  };
+
+  const sel = mkEl("select",{});
+  pats.forEach(p=>{
+    const opt = mkEl("option",{value:p.id},[p.name]);
+    if(p.id===a.patientId) opt.selected=true;
+    sel.appendChild(opt);
+  });
+  const date = mkEl("input",{type:"date", value: a.dateISO});
+  const time = mkEl("input",{value: a.time, placeholder:"HH:MM"});
+  const status = mkEl("select",{},[
+    mkEl("option",{value:"Agendado"},["Agendado"]),
+    mkEl("option",{value:"Confirmado"},["Confirmado"]),
+    mkEl("option",{value:"Atendido"},["Atendido"]),
+    mkEl("option",{value:"Faltou"},["Faltou"]),
+    mkEl("option",{value:"Cancelado"},["Cancelado"]),
+  ]);
+  status.value = a.status;
+  const notes = mkEl("input",{value: a.notes, placeholder:"Observações (opcional)"});
+
+  openModal(existing?.id ? "Editar agendamento" : "Novo agendamento", mkEl("div",{},[
+    mkEl("div",{class:"row"},[
+      field("Paciente", sel),
+      field("Data", date),
+    ]),
+    mkEl("div",{class:"row"},[
+      field("Hora", time),
+      field("Status", status),
+    ]),
+    field("Observações (opcional)", notes),
+    mkEl("div",{class:"btnRow"},[
+      btn("Salvar","btn", async ()=>{
+        const obj = {
+          ...a,
+          patientId: sel.value,
+          dateISO: date.value || fmtDateISO(now()),
+          time: time.value.trim() || "00:00",
+          status: status.value,
+          notes: notes.value.trim(),
+        };
+        if(!obj.patientId){ toast("Selecione um paciente."); return; }
+        await idbPut("appointments", obj);
+        toast("Agendamento salvo.");
+        closeModal();
+        setView("calendar");
+      }),
+      btn("Cancelar","btn ghost", closeModal),
+    ])
+  ]));
+}
+
+/* ==========================================================
+   DOCUMENTS VIEW
+   ========================================================== */
+async function renderDocuments(){
+  const root = $("#view-documents");
+  if(state.view!=="documents"){ root.innerHTML=""; return; }
+  root.innerHTML = "";
+
+  const pats = (await idbAll("patients")).sort((a,b)=>a.name.localeCompare(b.name));
+  const selected = state.selectedPatientId ? pats.find(p=>p.id===state.selectedPatientId) : null;
+
+  const top = mkEl("div",{class:"card"},[
+    mkEl("h2",{},["Documentos (impressão individual)"]),
+    mkEl("div",{class:"muted", style:"font-size:12px; margin-top:-6px; line-height:1.5"},[
+      "Cada documento imprime com cabeçalho/rodapé e paginação automática (repete dados do profissional e do paciente)."
+    ]),
+    mkEl("div",{class:"row"},[
+      field("Paciente", (()=> {
+        const sel = mkEl("select",{});
+        sel.appendChild(mkEl("option",{value:""},["— Selecione —"]));
+        pats.forEach(p=>{
+          const opt = mkEl("option",{value:p.id},[p.name]);
+          if(p.id===state.selectedPatientId) opt.selected=true;
+          sel.appendChild(opt);
+        });
+        sel.addEventListener("change", ()=>{
+          state.selectedPatientId = sel.value || null;
+          render();
+        });
+        return sel;
+      })()),
+      field("Tipo de documento", (()=> {
+        const sel = mkEl("select",{id:"docTypeSel"});
+        DOC_TYPES.filter(d=>d.key!=="soap").forEach(d=> sel.appendChild(mkEl("option",{value:d.key},[d.name])));
+        return sel;
+      })())
+    ]),
+    mkEl("div",{class:"btnRow", style:"justify-content:flex-start; margin-top:10px"},[
+      btn("Criar documento","btn", ()=>{
+        const dt = $("#docTypeSel").value;
+        if(!state.selectedPatientId){ toast("Selecione um paciente."); return; }
+        openDocForm(dt);
+      }),
+      btn("Imprimir último SOAP do paciente","btn ghost", async ()=>{
+        if(!state.selectedPatientId){ toast("Selecione um paciente."); return; }
+        const p = await idbGet("patients", state.selectedPatientId);
+        const visits = (await idbIndexAll("visits","by_patient", p.id))
+          .sort((a,b)=> (b.dateISO+(b.time||"")).localeCompare(a.dateISO+(a.time||"")));
+        if(!visits.length){ toast("Paciente sem consultas SOAP ainda."); return; }
+        printSOAP(p, visits[0]);
+      }),
+    ])
+  ]);
+
+  const info = mkEl("div",{class:"card"},[
+    mkEl("h2",{},["Paciente selecionado"]),
+    selected
+      ? mkEl("div",{},[
+          mkEl("div",{style:"font-weight:900; font-size:18px"},[selected.name]),
+          mkEl("div",{class:"muted", style:"margin-top:4px"},[
+            (selected.birth?`Nascimento: ${fmtBR(parseISO(selected.birth))}`:"") +
+            (selected.cpf?` • CPF: ${selected.cpf}`:"") +
+            (selected.phone?` • Tel: ${selected.phone}`:"")
+          ]),
+          selected.alerts ? mkEl("div",{class:"tag"},["Alertas: "+selected.alerts]) : null,
+        ])
+      : mkEl("div",{class:"muted"},["Nenhum paciente selecionado."])
+  ]);
+
+  root.appendChild(top);
+  root.appendChild(info);
+}
+
+function openDocForm(typeKey){
+  // Base fields comuns
+  const titleMap = {
+    rx:"Receituário",
+    att:"Atestado",
+    laudo:"Laudo",
+    orc:"Orçamento",
+    tcle:"Termo de Consentimento (TCLE)"
+  };
+  const t = titleMap[typeKey] || "Documento";
+  const patientPromise = idbGet("patients", state.selectedPatientId);
+
+  patientPromise.then(patient=>{
+    if(!patient){ toast("Paciente não encontrado."); return; }
+
+    const date = mkEl("input",{type:"date", value: fmtDateISO(now())});
+    const place = mkEl("input",{value: settings.cityUF || "Cidade/UF", placeholder:"Cidade/UF"});
+    const body = mkEl("textarea",{placeholder:"Digite o conteúdo do documento aqui…"});
+    body.value = defaultDocText(typeKey, patient);
+
+    // Receituário inteligente (lista de medicamentos)
+    const medsWrap = mkEl("div",{class:"hidden", id:"medsWrap"},[]);
+    const medList = mkEl("div",{class:"list", id:"medList"},[]);
+    const medName = mkEl("input",{placeholder:"Medicamento (ex.: Amoxicilina 500mg)"});
+    const medHow  = mkEl("input",{placeholder:"Posologia / modo de usar"});
+    const medDays = mkEl("input",{placeholder:"Duração / quantidade (opcional)"});
+    const addMedBtn = btn("+ Adicionar medicamento","btn", ()=>{
+      const n = medName.value.trim();
+      const h = medHow.value.trim();
+      const d = medDays.value.trim();
+      if(!n || !h){ toast("Preencha medicamento e posologia."); return; }
+      medList.appendChild(mkEl("div",{class:"item"},[
+        mkEl("div",{},[
+          mkEl("strong",{},[n]),
+          mkEl("small",{},[h + (d?` • ${d}`:"")]),
+        ]),
+        mkEl("div",{class:"actions"},[
+          btn("Remover","btn danger", ()=> medList.removeChild(medList.lastChild))
+        ])
+      ]));
+      medName.value=""; medHow.value=""; medDays.value="";
+    });
+
+    if(typeKey==="rx"){
+      medsWrap.classList.remove("hidden");
+      medsWrap.appendChild(mkEl("div",{class:"muted", style:"font-size:12px; margin-bottom:10px"},[
+        "Receituário inteligente: você pode montar itens (melhor organização e impressão)."
+      ]));
+      medsWrap.appendChild(mkEl("div",{class:"row"},[
+        field("Medicamento", medName),
+        field("Posologia", medHow),
+      ]));
+      medsWrap.appendChild(field("Duração/Quantidade (opcional)", medDays));
+      medsWrap.appendChild(mkEl("div",{class:"btnRow", style:"justify-content:flex-start"},[addMedBtn]));
+      medsWrap.appendChild(mkEl("div",{style:"height:8px"}));
+      medsWrap.appendChild(medList);
+    }
+
+    const includeSig = mkEl("select",{},[
+      mkEl("option",{value:"yes"},["Com assinatura"]),
+      mkEl("option",{value:"no"},["Sem assinatura"])
+    ]);
+
+    openModal(`Criar — ${t}`, mkEl("div",{},[
+      mkEl("div",{class:"row"},[
+        field("Data", date),
+        field("Local (Cidade/UF)", place),
+      ]),
+      field("Assinatura", includeSig),
+      medsWrap,
+      field("Conteúdo livre (opcional)", body),
+      mkEl("div",{class:"btnRow"},[
+        btn("Imprimir","btn", async ()=>{
+          const blocks = buildBlocksFromDoc(typeKey, body.value, medList);
+          const docMetaRight = `${fmtBR(parseISO(date.value))}\n${place.value || ""}`;
+          await buildAndPrintDocument({
+            docTitle: t,
+            patient,
+            docMetaRight,
+            blocks,
+            needPatientMeta: true,
+            includeSignature: includeSig.value==="yes",
+          });
+          closeModal();
+        }),
+        btn("Cancelar","btn ghost", closeModal),
+      ])
+    ]));
+  });
+}
+
+function defaultDocText(typeKey, patient){
+  const p = patient?.name || "Paciente";
+  if(typeKey==="att"){
+    return `Atesto para os devidos fins que ${p} esteve em atendimento nesta data.\n\nNecessita afastamento por ____ dias.\n\nCID (opcional): ________`;
+  }
+  if(typeKey==="laudo"){
+    return `Laudo/Relatório clínico:\n\n1) Histórico:\n\n2) Exame/achados:\n\n3) Conclusão:\n\nCID (opcional): ________`;
+  }
+  if(typeKey==="orc"){
+    return `ORÇAMENTO / PLANO DE TRATAMENTO\n\n- Procedimento: __________________________\n- Valor: R$ ______________________________\n\nObservações:\n\nCondições de pagamento:\n`;
+  }
+  if(typeKey==="tcle"){
+    return `TERMO DE CONSENTIMENTO LIVRE E ESCLARECIDO\n\nDeclaro que fui devidamente informado(a) sobre o procedimento, riscos, benefícios e alternativas.\n\nAutorizo a realização do procedimento proposto.\n\n( ) Concordo    ( ) Não concordo\n\nAssinatura do(a) paciente/responsável: __________________________`;
+  }
+  // rx
+  return `Receituário:\n\n(Use o bloco de medicamentos para organizar melhor.)\n\nObservações:\n- Retornar em ____ dias.\n- Em caso de sinais de alerta, procurar atendimento.`;
+}
+
+function buildBlocksFromDoc(typeKey, freeText, medListEl){
+  const blocks = [];
+  if(typeKey==="rx"){
+    // montar lista a partir dos itens adicionados
+    const meds = $$(".item", medListEl).map(it=>{
+      const title = it.querySelector("strong")?.textContent || "";
+      const desc  = it.querySelector("small")?.textContent || "";
+      return {title, desc};
+    });
+    if(meds.length){
+      blocks.push({type:"h4", text:"Prescrição"});
+      blocks.push({
+        type:"ul",
+        items: meds.map(m=> `${m.title} — ${m.desc}`)
+      });
+    }
+    const rest = (freeText||"").trim();
+    if(rest){
+      blocks.push({type:"h4", text:"Orientações/Observações"});
+      blocks.push({type:"p", text: rest});
+    }
+    return blocks;
+  }
+
+  // Documento geral: separar por linhas/paragraphs
+  const text = (freeText||"").trim();
+  if(text){
+    text.split("\n").forEach(line=>{
+      const ln = line.trim();
+      if(!ln){ blocks.push({type:"p", text:""}); return; }
+      // heurística de título
+      if(ln.endsWith(":") && ln.length<=60){
+        blocks.push({type:"h4", text: ln.replace(/:$/,"")});
+      }else{
+        blocks.push({type:"p", text: ln});
+      }
+    });
+  }else{
+    blocks.push({type:"p", text:""});
+  }
+  return blocks;
+}
+
+/* ==========================================================
+   SETTINGS VIEW
+   ========================================================== */
+async function renderSettings(){
+  const root = $("#view-settings");
+  if(state.view!=="settings"){ root.innerHTML=""; return; }
+  root.innerHTML = "";
+
+  const s = {...settings};
+  const pro = mkEl("input",{value:s.professionalName, placeholder:"Seu nome"});
+  const clinic = mkEl("input",{value:s.clinicName, placeholder:"Clínica (opcional)"});
+  const council = mkEl("input",{value:s.council, placeholder:"CRO/CRM"});
+  const councilUF = mkEl("input",{value:s.councilUF, placeholder:"UF"});
+  const councilNum = mkEl("input",{value:s.councilNumber, placeholder:"Número"});
+  const spec = mkEl("input",{value:s.specialty, placeholder:"Especialidade (opcional)"});
+  const phone = mkEl("input",{value:s.phone, placeholder:"Telefone"});
+  const email = mkEl("input",{value:s.email, placeholder:"E-mail"});
+  const address = mkEl("textarea",{placeholder:"Endereço completo (vai no rodapé do documento)"});
+  address.value = s.address;
+  const cityUF = mkEl("input",{value:s.cityUF, placeholder:"Cidade/UF"});
+
+  const usePIN = mkEl("select",{},[
+    mkEl("option",{value:"no"},["Não"]),
+    mkEl("option",{value:"yes"},["Sim (pedir PIN ao entrar)"]),
+  ]);
+  usePIN.value = s.usePIN ? "yes" : "no";
+
+  const pin = mkEl("input",{type:"password", placeholder:"Defina um PIN (opcional)"});
+  pin.value = loadPIN();
+
+  const logo = mkEl("input",{type:"file", accept:"image/*"});
+  const sig  = mkEl("input",{type:"file", accept:"image/*"});
+
+  const licCard = mkEl("div",{class:"card"},[
+    mkEl("h2",{},["Licença"]),
+    mkEl("div",{class:"muted", style:"font-size:12px; line-height:1.5"},[
+      "Controle simples por dispositivo. Para suporte, use o ID abaixo."
+    ]),
+    mkEl("div",{class:"hr"}),
+    mkEl("div",{class:"row"},[
+      field("Status", (()=> {
+        const st = mkEl("input",{value: isAxisCareLicensed() ? "ATIVADO" : "NÃO ATIVADO", readonly:"true"});
+        return st;
+      })()),
+      field("ID do dispositivo", (()=> {
+        const id = mkEl("input",{value: getDeviceId(), readonly:"true"});
+        return id;
+      })())
+    ]),
+    mkEl("div",{class:"btnRow", style:"justify-content:flex-start"},[
+      btn("Copiar ID","btn ghost", async ()=>{
+        try{
+          await navigator.clipboard.writeText(getDeviceId());
+          toast("ID copiado.");
+        }catch{
+          toast("Não foi possível copiar automaticamente. Selecione e copie manualmente.");
+        }
+      }),
+      btn("Desativar neste aparelho","btn danger", ()=>{
+        localStorage.removeItem(LICENSE_KEY);
+        toast("Licença removida deste aparelho.");
+      })
+    ])
+  ]);
+
+  root.appendChild(mkEl("div",{class:"card"},[
+    mkEl("h2",{},["Dados do profissional (aparecem em todos os documentos)"]),
+    mkEl("div",{class:"row"},[
+      field("Nome do profissional", pro),
+      field("Clínica (opcional)", clinic),
+    ]),
+    mkEl("div",{class:"row3"},[
+      field("Conselho (CRO/CRM)", council),
+      field("UF", councilUF),
+      field("Número", councilNum),
+    ]),
+    mkEl("div",{class:"row"},[
+      field("Especialidade (opcional)", spec),
+      field("Cidade/UF (padrão)", cityUF),
+    ]),
+    mkEl("div",{class:"row"},[
+      field("Telefone", phone),
+      field("E-mail", email),
+    ]),
+    field("Endereço (rodapé)", address),
+    mkEl("div",{class:"hr"}),
+    mkEl("div",{class:"row"},[
+      field("Usar PIN na entrada?", usePIN),
+      field("PIN (se usar)", pin),
+    ]),
+    mkEl("div",{class:"row"},[
+      field("Logomarca (opcional)", logo),
+      field("Assinatura (opcional)", sig),
+    ]),
+    mkEl("div",{class:"btnRow"},[
+      btn("Salvar configurações","btn", async ()=>{
+        settings = {
+          ...settings,
+          professionalName: pro.value.trim(),
+          clinicName: clinic.value.trim(),
+          council: council.value.trim() || "CRO",
+          councilUF: councilUF.value.trim() || "PA",
+          councilNumber: councilNum.value.trim(),
+          specialty: spec.value.trim(),
+          phone: phone.value.trim(),
+          email: email.value.trim(),
+          address: address.value.trim(),
+          cityUF: cityUF.value.trim() || "Belém - PA",
+          usePIN: usePIN.value==="yes",
+        };
+        saveSettings(settings);
+        savePIN(pin.value.trim());
+        // load images
+        if(logo.files && logo.files[0]){
+          settings.logoDataUrl = await fileToDataUrl(logo.files[0]);
+          saveSettings(settings);
+        }
+        if(sig.files && sig.files[0]){
+          settings.signatureDataUrl = await fileToDataUrl(sig.files[0]);
+          saveSettings(settings);
+        }
+        toast("Configurações salvas.");
+        render();
+      }),
+      btn("Resetar imagens","btn danger", ()=>{
+        settings.logoDataUrl = "";
+        settings.signatureDataUrl = "";
+        saveSettings(settings);
+        toast("Logomarca/assinatura removidas.");
+        render();
+      })
+    ])
+  ]));
+
+  root.appendChild(licCard);
+}
+
+function fileToDataUrl(file){
+  return new Promise((resolve,reject)=>{
+    const r = new FileReader();
+    r.onload = ()=>resolve(String(r.result||""));
+    r.onerror = ()=>reject(r.error);
+    r.readAsDataURL(file);
+  });
+}
+
+/* ==========================================================
+   PRINTING (Document builder + pagination)
+   ========================================================== */
+
+async function printSOAP(patient, visit){
+  const title = "PRONTUÁRIO — EVOLUÇÃO (SOAP)";
+  const blocks = [
+    {type:"h4", text:"S — Subjetivo"},
+    {type:"p",  text: visit.soapS || ""},
+    {type:"h4", text:"O — Objetivo"},
+    {type:"p",  text: visit.soapO || ""},
+    {type:"h4", text:"A — Avaliação"},
+    {type:"p",  text: visit.soapA || ""},
+    {type:"h4", text:"P — Plano"},
+    {type:"p",  text: visit.soapP || ""},
+  ];
+  if(visit.diagnoses) blocks.push({type:"p", text:`Diagnóstico: ${visit.diagnoses}`});
+  if(visit.plan) blocks.push({type:"p", text:`Plano resumido: ${visit.plan}`});
+
+  const docMetaRight = `${fmtBR(parseISO(visit.dateISO))}\n${visit.time || ""}\n${settings.cityUF || ""}`;
+  await buildAndPrintDocument({
+    docTitle: title,
+    patient,
+    docMetaRight,
+    blocks,
+    needPatientMeta: true,
+    includeSignature: true,
+  });
+}
+
+function proMetaLines(){
+  const lines = [];
+  const pro = (settings.professionalName||"").trim();
+  const clinic = (settings.clinicName||"").trim();
+  if(clinic) lines.push(clinic);
+  if(settings.specialty) lines.push(settings.specialty);
+  const reg = settings.councilNumber ? `${settings.council} ${settings.councilNumber}/${settings.councilUF}` : `${settings.council}/${settings.councilUF}`;
+  lines.push(reg);
+  if(settings.phone) lines.push(settings.phone);
+  if(settings.email) lines.push(settings.email);
+  return lines.join("\n").trim();
+}
+function patMetaLines(patient){
+  const lines = [];
+  if(patient.birth) lines.push(`Nascimento: ${fmtBR(parseISO(patient.birth))}`);
+  if(patient.cpf) lines.push(`CPF: ${patient.cpf}`);
+  if(patient.phone) lines.push(`Telefone: ${patient.phone}`);
+  return lines.join("\n").trim();
+}
+function footerLines(){
+  const a = (settings.address||"").trim();
+  const c = (settings.cityUF||"").trim();
+  return [a, c].filter(Boolean).join("\n");
+}
+
+async function buildAndPrintDocument({docTitle, patient, docMetaRight, blocks, needPatientMeta=true, includeSignature=true}){
+  const stage = $("#printStage");
+  stage.innerHTML = "";
+
+  // Criar páginas por medição real (evita quebrar borda)
+  const pages = paginateBlocks(blocks, includeSignature);
+
+  pages.forEach((pageBlocks, idx)=>{
+    stage.appendChild(buildDocPage({
+      docTitle, patient, docMetaRight,
+      blocks: pageBlocks,
+      pageNum: idx+1,
+      pageCount: pages.length,
+      needPatientMeta,
+      includeSignature: includeSignature && (idx === pages.length-1)
+    }));
+  });
+
+  setTimeout(()=>{ window.print(); }, 50);
+}
+
+function buildDocPage({docTitle, patient, docMetaRight, blocks, pageNum, pageCount, needPatientMeta, includeSignature}){
+  const page = mkEl("div",{class:"docShell"},[
+    mkEl("div",{class:"docPage"},[
+      mkEl("div",{class:"docFrame"}),
+      mkEl("div",{class:"docInner"},[
+        mkEl("div",{class:"docHeader"},[
+          mkEl("div",{class:"hLeft"},[
+            mkEl("div",{class:"proName"},[settings.professionalName || "Profissional"]),
+            mkEl("div",{class:"proMeta"},[proMetaLines()]),
+            needPatientMeta ? mkEl("div",{class:"patName"},[patient?.name || "Paciente"]) : null,
+            needPatientMeta ? mkEl("div",{class:"patMeta"},[patMetaLines(patient)]) : null,
+          ]),
+          mkEl("div",{class:"hRight"},[
+            mkEl("div",{class:"docTitle"},[docTitle]),
+            mkEl("div",{class:"docMeta"},[docMetaRight || ""]),
+          ]),
+        ]),
+        mkEl("div",{class:"docBody"}, renderBlocks(blocks)),
+        mkEl("div",{class:"docFooter"},[
+          mkEl("div",{},[footerLines()]),
+          mkEl("div",{},[`Página ${pageNum} de ${pageCount}`]),
+        ]),
+      ]),
+    ])
+  ]);
+
+  if(includeSignature){
+    const body = page.querySelector(".docBody");
+    body.appendChild(mkEl("div",{class:"sigBox"},[
+      mkEl("div",{class:"sigWrap"},[
+        settings.signatureDataUrl
+          ? mkEl("img",{class:"sigImg", src: settings.signatureDataUrl, alt:"Assinatura"})
+          : mkEl("div",{style:"height:18mm"}),
+        mkEl("div",{class:"sigLine"},[
+          `${settings.professionalName || "Profissional"}\n${settings.council} ${settings.councilNumber || ""}/${settings.councilUF}`
+        ])
+      ])
+    ]));
+  }
+
+  return page;
+}
+
+function renderBlocks(blocks){
+  const out = [];
+  blocks.forEach(b=>{
+    if(b.type==="h4"){
+      out.push(mkEl("div",{class:"block"},[ mkEl("h4",{},[b.text||""]) ]));
+      return;
+    }
+    if(b.type==="ul"){
+      const ul = mkEl("ul",{});
+      (b.items||[]).forEach(it=> ul.appendChild(mkEl("li",{},[it])));
+      out.push(mkEl("div",{class:"block"},[ul]));
+      return;
+    }
+    // p
+    out.push(mkEl("div",{class:"block"},[ mkEl("p",{},[b.text||""]) ]));
+  });
+  return out;
+}
+
+/* ===== Paginação real por altura =====
+   Estratégia:
+   - cria um "page simulator" invisível
+   - adiciona blocos até estourar altura do corpo
+   - quando estoura, fecha página e continua
+*/
+function paginateBlocks(blocks, includeSignature){
+  const sim = document.createElement("div");
+  sim.style.position="fixed";
+  sim.style.left="-99999px";
+  sim.style.top="0";
+  sim.style.width="210mm";
+  sim.style.height="297mm";
+  sim.style.background="#fff";
+  sim.style.visibility="hidden";
+  sim.innerHTML = `
+    <div class="docPage">
+      <div class="docInner">
+        <div class="docHeader" style="height:auto"></div>
+        <div class="docBody"></div>
+        <div class="docFooter" style="height:auto"></div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(sim);
+
+  const bodyEl = sim.querySelector(".docBody");
+  // altura máxima do corpo (aprox). Como o header/footer existem, o body já fica no espaço.
+  const maxH = bodyEl.getBoundingClientRect().height;
+
+  const pages = [];
+  let cur = [];
+
+  function flush(){
+    if(cur.length) pages.push(cur);
+    cur = [];
+    bodyEl.innerHTML="";
+  }
+
+  for(let i=0;i<blocks.length;i++){
+    const b = blocks[i];
+    // tenta inserir bloco
+    const node = renderBlocks([b])[0];
+    bodyEl.appendChild(node);
+
+    const h = bodyEl.scrollHeight;
+    if(h > maxH){
+      // não cabe: remove e cria nova página
+      bodyEl.removeChild(node);
+
+      // se o bloco é parágrafo longo, tenta quebrar
+      if(b.type==="p" && (b.text||"").length > 200){
+        const parts = splitTextToFitParagraph(b.text||"", bodyEl, maxH);
+        // a primeira parte vai nessa página
+        cur.push({type:"p", text: parts.first});
+        flush();
+        // o resto vai em páginas seguintes (como parágrafos)
+        const rest = parts.rest;
+        rest.forEach(txt=>{
+          // recomeça com um parágrafo por vez
+          const n2 = renderBlocks([{type:"p", text: txt}])[0];
+          bodyEl.appendChild(n2);
+          if(bodyEl.scrollHeight > maxH){
+            bodyEl.removeChild(n2);
+            flush();
+            bodyEl.appendChild(renderBlocks([{type:"p", text: txt}])[0]);
+          }
+          cur.push({type:"p", text: txt});
+        });
+        flush(); // garante fechamento após longos
+        continue;
+      }
+
+      // fecha página atual
+      flush();
+
+      // coloca o bloco na nova página
+      bodyEl.appendChild(node);
+      cur.push(b);
+    }else{
+      cur.push(b);
+    }
+  }
+  flush();
+
+  // assinatura entra só na última página no buildDocPage (não precisa paginar aqui)
+  document.body.removeChild(sim);
+  return pages.length ? pages : [blocks];
+}
+
+function splitTextToFitParagraph(text, bodyEl, maxH){
+  // quebra por palavras com busca binária para caber
+  const words = text.split(/\s+/);
+  let lo = 1, hi = words.length, best = 1;
+
+  const probe = document.createElement("div");
+  probe.className="block";
+  const p = document.createElement("p");
+  probe.appendChild(p);
+
+  bodyEl.appendChild(probe);
+
+  while(lo<=hi){
+    const mid = Math.floor((lo+hi)/2);
+    p.textContent = words.slice(0,mid).join(" ");
+    if(bodyEl.scrollHeight <= maxH){
+      best = mid;
+      lo = mid + 1;
+    }else{
+      hi = mid - 1;
+    }
+  }
+
+  bodyEl.removeChild(probe);
+
+  const first = words.slice(0,best).join(" ");
+  const remainingWords = words.slice(best);
+  // divide o restante em pedaços menores por tamanho (seguro)
+  const rest = [];
+  let chunk = [];
+  remainingWords.forEach(w=>{
+    chunk.push(w);
+    if(chunk.join(" ").length > 900){
+      rest.push(chunk.join(" "));
+      chunk = [];
+    }
+  });
+  if(chunk.length) rest.push(chunk.join(" "));
+  return {first, rest};
+}
+
+/* ==========================================================
+   Service Worker registration
+   ========================================================== */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
+  });
+}
+
+/* ==========================================================
+   Init
+   ========================================================== */
+(async function init(){
+  settings = loadSettings();
+
+  // mostra deviceId na tela inicial
+  $("#deviceIdView").textContent = getDeviceId();
+  updateSplashStatus();
+
+  await idbOpen();
+  await seedIfEmpty();
+
+  // Se licenciado e PIN desligado, deixa o usuário entrar sem fricção (opcional)
+  // -> aqui mantive para você clicar em "Entrar" sempre (mais controle).
+})();
+</script>
+</body>
+</html>
